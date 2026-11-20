@@ -1,0 +1,150 @@
+{
+  "info": {
+    "name": "StockPilot REST API",
+    "description": "CRUD tests for Products and Sales resources.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "productId",
+      "value": "1"
+    },
+    {
+      "key": "saleId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "GET all products",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/products"
+          }
+        },
+        {
+          "name": "GET product by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/products/{{productId}}"
+          }
+        },
+        {
+          "name": "POST create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Postman Sample Item\",\n  \"category\": \"Testing\",\n  \"price\": 45.5,\n  \"qty\": 15\n}"
+            },
+            "url": "{{baseUrl}}/api/products"
+          }
+        },
+        {
+          "name": "PUT update product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Postman Sample\",\n  \"category\": \"Testing\",\n  \"price\": 50,\n  \"qty\": 20\n}"
+            },
+            "url": "{{baseUrl}}/api/products/{{productId}}"
+          }
+        },
+        {
+          "name": "DELETE product",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/products/{{productId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "item": [
+        {
+          "name": "GET all sales",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/sales"
+          }
+        },
+        {
+          "name": "GET sale by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/sales/{{saleId}}"
+          }
+        },
+        {
+          "name": "POST create sale",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"qty\": 2,\n  \"customer\": \"Walk-in Customer\"\n}"
+            },
+            "url": "{{baseUrl}}/api/sales"
+          }
+        },
+        {
+          "name": "PUT update sale",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"qty\": 3,\n  \"customer\": \"Updated Customer\"\n}"
+            },
+            "url": "{{baseUrl}}/api/sales/{{saleId}}"
+          }
+        },
+        {
+          "name": "DELETE sale",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/sales/{{saleId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/health"
+      }
+    }
+  ]
+}
