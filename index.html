@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMS | Stock Management System</title>
+  <style>
+    :root {
+      --navy: #11152f;
+      --navy2: #20264d;
+      --blue: #4657a8;
+      --cyan: #64e3dc;
+      --white: #fbfcff;
+      --muted: #b7c1df;
+      --ink: #202443;
+      --line: #e1e5f3;
+      --green: #159b83;
+      --red: #d94d70;
+      --gold: #e2aa48
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background: radial-gradient(circle at 12% 8%, #354b88 0, #20264d 38%, #101329 100%);
+      color: var(--white);
+      min-height: 100vh
+    }
+
+    button,
+    input,
+    select {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      border-radius: 11px;
+      padding: 10px 15px;
+      font-weight: 700;
+      transition: .2s
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05)
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 245px 1fr;
+      min-height: 100vh
+    }
+
+    .sidebar {
+      padding: 26px 18px;
+      background: linear-gradient(155deg, #11152f, #242b58);
+      border-right: 1px solid #ffffff18;
+      box-shadow: 8px 0 28px #0003;
+      position: sticky;
+      top: 0;
+      height: 100vh
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 8px 36px
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #b5fff4 0%, #5bd5d0 42%, #5268c8 100%);
+      display: grid;
+      place-items: center;
+      color: #172044;
+      font-size: 22px;
+      font-weight: 900;
+      box-shadow: 0 10px 18px #070b2580, 0 4px 0 #34428d, inset 2px 2px 5px #ffffffd9, inset -3px -4px 7px #25387980; text-shadow: 0 2px 1px #ffffff80; transform: perspective(90px) rotateX(7deg)
+    }
+
+    .brand strong {
+      font-size: 19px;
+      letter-spacing: 2px;
+      font-weight: 900
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px
+    }
+
+    .nav-label {
+      font-size: 10px;
+      color: #7895b6;
+      letter-spacing: 1.5px;
+      margin: 20px 12px 9px
+    }
+
+    .nav button {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      color: #c8d8e9;
+      background: transparent;
+      padding: 12px 14px;
+      margin: 5px 0;
+      border-radius: 12px
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: linear-gradient(110deg, #5368c5, #303d82);
+      color: white;
+      box-shadow: inset 0 1px #ffffff30, 0 6px 14px #0003
+    }
+
+    .nav .ico {
+      width: 22px;
+      text-align: center;
+      font-size: 17px
+    }
+
+    .sidebar-foot {
+      position: absolute;
+      bottom: 22px;
+      left: 22px;
+      right: 22px;
+      color: #88a4c2;
+      font-size: 11px;
+      line-height: 1.5
+    }
+
+    main {
+      padding: 28px clamp(18px, 3vw, 42px) 48px;
+      max-width: 1500px;
+      width: 100%;
+      margin: auto
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 28px
+    }
+
+    .eyebrow {
+      color: #8fc5ed;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 2px;
+      font-weight: 800
+    }
+
+    .topbar h1 {
+      font-size: 26px;
+      margin: 5px 0 0
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff12;
+      border: 1px solid #ffffff20;
+      padding: 8px 13px;
+      border-radius: 30px;
+      color: #dcecff;
+      font-size: 12px
+    }
+
+    .avatar {
+      width: 29px;
+      height: 29px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #7edcf4, #2875b8);
+      color: #08213c;
+      font-weight: 900
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
+    .welcome {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px
+    }
+
+    .welcome h2 {
+      margin: 0 0 6px;
+      font-size: 21px
+    }
+
+    .welcome p {
+      margin: 0;
+      color: #a9bfd8;
+      font-size: 13px
+    }
+
+    .primary {
+      background: linear-gradient(145deg, #ffffff, #dffbf8);
+      color: #20264d;
+      box-shadow: 0 5px 0 #a5b8d7, 0 9px 18px #0004, inset 0 1px #fff
+    }
+
+    .secondary {
+      background: linear-gradient(145deg, #5264b8, #303d82);
+      color: #e9f5ff;
+      border: 1px solid #8192df
+    }
+
+    .danger {
+      background: #fff0f1;
+      color: #a92e3d
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px
+    }
+
+    .stat {
+      padding: 19px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #354987, #22294f);
+      border: 1px solid #ffffff20;
+      box-shadow: 8px 10px 20px #0003, inset 1px 1px #ffffff22;
+      position: relative;
+      overflow: hidden
+    }
+
+    .stat:after {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      right: -32px;
+      top: -38px;
+      background: #ffffff0b
+    }
+
+    .stat .label {
+      color: #aec5df;
+      font-size: 12px
+    }
+
+    .stat .num {
+      font-size: 27px;
+      font-weight: 850;
+      margin: 10px 0 4px
+    }
+
+    .stat .sub {
+      font-size: 11px;
+      color: #8fb2d5
+    }
+
+    .stat .symbol {
+      float: right;
+      font-size: 23px;
+      opacity: .9
+    }
+
+    .panel {
+      background: linear-gradient(145deg, #fdfefe, #e9f1f9);
+      color: var(--ink);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 14px 30px #0003, inset 0 1px white;
+      margin-bottom: 18px
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px
+    }
+
+    .panel h3 {
+      margin: 0;
+      font-size: 16px
+    }
+
+    .muted {
+      color: #71839a;
+      font-size: 12px
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 18px
+    }
+
+    .table-wrap {
+      overflow-x: auto
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      white-space: nowrap
+    }
+
+    th {
+      text-align: left;
+      color: #6b7d93;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      padding: 11px 9px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    td {
+      padding: 12px 9px;
+      border-bottom: 1px solid #e9eff5
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 800
+    }
+
+    .ok {
+      background: #e1f6ed;
+      color: #08764e
+    }
+
+    .low {
+      background: #fff1d9;
+      color: #9c650b
+    }
+
+    .out {
+      background: #ffe4e7;
+      color: #b32d3e
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px
+    }
+
+    .mini {
+      padding: 6px 9px;
+      font-size: 10px;
+      border-radius: 8px
+    }
+
+    .edit {
+      background: #e8f1fb;
+      color: #174b83
+    }
+
+    .delete {
+      background: #ffe8ea;
+      color: #b32d3e
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 13px
+    }
+
+    .field label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #4d6078
+    }
+
+    .field input,
+    .field select,
+    .search {
+      width: 100%;
+      border: 1px solid #d3dfeb;
+      background: #fff;
+      color: #1c2d43;
+      border-radius: 10px;
+      padding: 11px 12px;
+      outline: none
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .search:focus {
+      border-color: #3888c7;
+      box-shadow: 0 0 0 3px #3888c71c
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 14px
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px
+    }
+
+    .toolbar .search {
+      max-width: 340px
+    }
+
+    .empty {
+      text-align: center;
+      padding: 28px;
+      color: #7a8da3;
+      font-size: 13px
+    }
+
+    .sale-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .sale-total {
+      background: linear-gradient(145deg, #27366f, #4659a8);
+      color: white;
+      border-radius: 14px;
+      padding: 18px;
+      margin: 10px 0
+    }
+
+    .sale-total strong {
+      font-size: 25px;
+      display: block;
+      margin-top: 7px
+    }
+
+    .notice {
+      padding: 12px 14px;
+      border-radius: 11px;
+      background: #eaf5ff;
+      color: #24547e;
+      font-size: 12px;
+      margin-bottom: 14px
+    }
+
+    .chart-bars {
+      display: flex;
+      align-items: end;
+      gap: 12px;
+      height: 150px;
+      padding: 10px 8px 0;
+      border-bottom: 1px solid #dce6f1
+    }
+
+    .bar-col {
+      flex: 1;
+      text-align: center;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      align-items: center;
+      gap: 6px
+    }
+
+    .bar {
+      width: min(34px, 75%);
+      min-height: 3px;
+      border-radius: 7px 7px 2px 2px;
+      background: linear-gradient(180deg, #73eee0, #5368c5);
+      box-shadow: inset 1px 1px #ffffff66
+    }
+
+    .bar-col small {
+      font-size: 10px;
+      color: #73869d
+    }
+
+    .bar-col b {
+      font-size: 10px;
+      color: #3b526c
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: #f8fcff;
+      color: #102d4b;
+      padding: 13px 18px;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px #0005;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: .3s;
+      z-index: 10;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1
+    }
+
+    .modal-back {
+      position: fixed;
+      inset: 0;
+      background: #020b18b8;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 5
+    }
+
+    .modal-back.show {
+      display: flex
+    }
+
+    .modal {
+      width: min(500px, 100%);
+      background: #f6faff;
+      color: #132a44;
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 25px 60px #0008
+    }
+
+    .modal h3 {
+      margin: 0 0 17px
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 10px
+    }
+
+    footer {
+      text-align: center;
+      color: #6f8ba9;
+      font-size: 10px;
+      margin-top: 28px
+    }
+
+
+    .auth-screen{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at 12% 8%,#354b88 0,#20264d 45%,#101329 100%)}
+    .auth-card{width:min(420px,100%);background:linear-gradient(145deg,#ffffff,#edf2ff);color:#202443;border:1px solid #ffffffb8;border-radius:24px;padding:30px;box-shadow:0 30px 80px #080d2b99, inset 0 1px 0 #fff}
+    .auth-brand{text-align:center;margin-bottom:22px}.auth-logo{width:66px;height:66px;border-radius:19px;background:linear-gradient(145deg,#c5fff7 0%,#61d8d2 38%,#596bd0 100%);display:grid;place-items:center;color:#172044;font-size:34px;font-weight:1000;margin:0 auto 14px;box-shadow:0 12px 0 #35458f,0 19px 28px #17204455,inset 3px 3px 7px #ffffffed,inset -4px -5px 8px #27387988;text-shadow:0 2px 1px #ffffffa8;transform:perspective(100px) rotateX(8deg);border:1px solid #ffffffb8}
+    .auth-card h2{text-align:center;margin:0 0 7px;letter-spacing:3px;font-weight:900;color:#29366f}.auth-card .muted{text-align:center;line-height:1.5;margin-bottom:20px}
+    .auth-card .field label{color:#46517e;text-transform:uppercase;letter-spacing:.8px}.auth-error{color:#b32d3e;font-size:12px;min-height:18px;margin:8px 0}
+    .auth-card button{width:100%;letter-spacing:.55px;text-transform:uppercase}.auth-note{font-size:11px;color:#71839a;line-height:1.5;margin-top:16px;text-align:center}
+    .password-wrap{display:flex;gap:8px;align-items:stretch}.password-wrap input{flex:1;min-width:0}.password-wrap .toggle-password{width:auto;min-width:66px;padding:8px 11px;background:#e4edf7;color:#173a60;border:1px solid #c5d5e6;border-radius:9px;font-size:12px}
+    .auth-switch{display:flex;justify-content:center;align-items:center;gap:5px;margin-top:15px;color:#71839a;font-size:12px}.auth-switch .link-button{width:auto;padding:3px 5px;background:transparent;color:#14558c;text-decoration:underline;font-size:12px;box-shadow:none}
+
+    @media(max-width:900px) {
+      .app {
+        grid-template-columns: 1fr
+      }
+
+      .sidebar {
+        height: auto;
+        position: relative;
+        padding: 13px 15px
+      }
+
+      .brand {
+        margin: 0 5px 12px
+      }
+
+      .nav {
+        display: flex;
+        overflow: auto;
+        gap: 5px
+      }
+
+      .nav-label,
+      .sidebar-foot {
+        display: none
+      }
+
+      .nav button {
+        width: auto;
+        white-space: nowrap;
+        margin: 0;
+        padding: 10px
+      }
+
+      .nav button span:last-child {
+        display: none
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      main {
+        padding-top: 20px
+      }
+
+      .grid-two {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:560px) {
+      .topbar h1 {
+        font-size: 21px
+      }
+
+      .user-pill {
+        font-size: 0
+      }
+
+      .stats {
+        gap: 9px
+      }
+
+      .stat {
+        padding: 14px
+      }
+
+      .stat .num {
+        font-size: 22px
+      }
+
+      .welcome {
+        align-items: flex-start;
+        flex-direction: column
+      }
+
+      .sale-card,
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .panel {
+        padding: 15px
+      }
+
+      .toolbar {
+        flex-wrap: wrap
+      }
+
+      .toolbar .search {
+        max-width: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <div class="auth-brand"><div class="auth-logo">S</div><h2>SMS</h2><div class="muted" id="authDescription">Sign in to manage your inventory and sales.</div></div>
+      <form id="authForm">
+        <div class="field" id="authNameField"><label>NAME / NUMBER</label><input id="authName" maxlength="60" autocomplete="username" placeholder="Enter your name or number"></div>
+        <div class="field">
+          <label for="authPassword">PASSWORD</label>
+          <div class="password-wrap"><input id="authPassword" type="password" required autocomplete="current-password" placeholder="Enter your password"><button class="toggle-password" type="button" id="toggleAuthPassword" aria-label="Show password" onclick="togglePassword('authPassword',this)">Show</button></div>
+        </div>
+        <div class="auth-error" id="authError" role="alert"></div>
+        <button class="primary" type="submit" id="authSubmit">Log In</button>
+      </form>
+      <div class="auth-switch"><span id="authSwitchText">No account yet?</span> <button type="button" class="link-button" id="authSwitch" onclick="setAuthMode(authMode==='login'?'create':'login')">Create Account</button></div>
+      <div class="auth-note" id="authNote">Create an account once, then log in anytime on this browser. Your data is stored locally.</div>
+    </div>
+  </div>
+  <div class="app" id="mainApp" style="display:none">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">S</div>
+        <div><strong>SMS</strong></div>
+      </div>
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="nav">
+        <button class="active" data-page="dashboard"><span class="ico">▦</span><span>Dashboard</span></button>
+        <button data-page="inventory"><span class="ico">▤</span><span>Inventory</span></button>
+        <button data-page="sales"><span class="ico">＋</span><span>Record Sale</span></button>
+        <button data-page="transactions"><span class="ico">↻</span><span>Transactions</span></button>
+        <button data-page="reports"><span class="ico">▥</span><span>Reports</span></button>
+        <button data-page="settings"><span class="ico">⚙</span><span>Settings</span></button>
+      </nav>
+      <div class="sidebar-foot">A simple way to keep your stock organized.<br>Local demo · Data saved in this browser
+      </div>
+    </aside>
+    <main>
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">Inventory management</div>
+          <h1 id="pageTitle">Business Overview</h1>
+        </div>
+        <div class="user-pill">
+          <div class="avatar" id="userAvatar">A</div> <span id="userDisplay">Admin Account</span>
+        </div>
+      </div>
+
+      <section id="dashboard" class="page active">
+        <div class="welcome">
+          <div>
+            <h2>Good day! Here's your store at a glance.</h2>
+            <p>Monitor products, stock levels, and sales in one place.</p>
+          </div><button class="primary" onclick="openProductModal()">＋ Add Product</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><span class="symbol">▤</span>
+            <div class="label">Total Products</div>
+            <div class="num" id="statProducts">0</div>
+            <div class="sub">Different items in inventory</div>
+          </div>
+          <div class="stat"><span class="symbol">◈</span>
+            <div class="label">Inventory Value</div>
+            <div class="num" id="statValue">₱0.00</div>
+            <div class="sub">Based on available stock</div>
+          </div>
+          <div class="stat"><span class="symbol">₱</span>
+            <div class="label">Total Sales</div>
+            <div class="num" id="statSales">₱0.00</div>
+            <div class="sub">All recorded transactions</div>
+          </div>
+          <div class="stat"><span class="symbol">⚑</span>
+            <div class="label">Low Stock Items</div>
+            <div class="num" id="statLow">0</div>
+            <div class="sub">Products with 5 or fewer units</div>
+          </div>
+        </div>
+        <div class="grid-two">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Recent Products</h3>
+                <div class="muted">Your latest inventory items</div>
+              </div><button class="secondary mini" onclick="showPage('inventory')">View all</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recentProducts"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3>Quick Summary</h3>
+                <div class="muted">Sales performance</div>
+              </div><span>📈</span>
+            </div>
+            <div class="chart-bars" id="miniChart"></div>
+            <p class="muted">Sales totals grouped by the last 7 days with recorded activity.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="inventory" class="page">
+        <div class="welcome">
+          <div>
+            <h2>Product Inventory</h2>
+            <p>Add, update, search, and remove your store products.</p>
+          </div><button class="primary" onclick="openProductModal()">＋ Add Product</button>
+        </div>
+        <div class="panel">
+          <div class="toolbar"><input id="inventorySearch" class="search"
+              placeholder="Search product name or category..." oninput="renderInventory()"><span class="muted"
+              id="inventoryCount"></span></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Unit Price</th>
+                  <th>Quantity</th>
+                  <th>Stock Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="sales" class="page">
+        <div class="welcome">
+          <div>
+            <h2>Record a Sale</h2>
+            <p>Choose a product and quantity. Stock is automatically deducted.</p>
+          </div>
+        </div>
+        <div class="sale-card">
+          <div class="panel">
+            <h3>Sale Details</h3>
+            <div class="field" style="margin-top:17px"><label>Product</label><select id="saleProduct"
+                onchange="updateSaleTotal()"></select></div>
+            <div class="field"><label>Quantity Sold</label><input type="number" id="saleQty" min="1" value="1"
+                oninput="updateSaleTotal()"></div>
+            <div class="field"><label>Customer (optional)</label><input id="saleCustomer"
+                placeholder="Walk-in customer"></div>
+            <div class="sale-total"><span style="color:#b9d7f1;font-size:12px">TOTAL AMOUNT</span><strong
+                id="saleTotal">₱0.00</strong></div><button class="primary" style="width:100%"
+              onclick="recordSale()">Complete Sale</button>
+          </div>
+          <div class="panel">
+            <h3>How it works</h3>
+            <p class="muted" style="line-height:1.8">1. Select an available product.<br>2. Enter the number of units
+              sold.<br>3. Review the total amount.<br>4. Click <b>Complete Sale</b> to save the transaction and update
+              inventory.</p>
+            <div class="notice">⚡ Stock updates immediately after a successful sale. You cannot sell more units than you
+              have.</div>
+            <div class="muted">Tip: Add products first in the Inventory page.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="transactions" class="page">
+        <div class="welcome">
+          <div>
+            <h2>Sales Transactions</h2>
+            <p>Review your recorded sales history.</p>
+          </div><button class="secondary" onclick="exportCSV()">⇩ Export CSV</button>
+        </div>
+        <div class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Transaction ID</th>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="transactionRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="reports" class="page">
+        <div class="welcome">
+          <div>
+            <h2>Business Reports</h2>
+            <p>A quick overview of inventory and sales totals.</p>
+          </div><button class="secondary" onclick="exportCSV()">⇩ Export Transactions</button>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Units in Stock</div>
+            <div class="num" id="reportUnits">0</div>
+            <div class="sub">Across all products</div>
+          </div>
+          <div class="stat">
+            <div class="label">Transactions</div>
+            <div class="num" id="reportTransactions">0</div>
+            <div class="sub">Completed sales</div>
+          </div>
+          <div class="stat">
+            <div class="label">Average Sale</div>
+            <div class="num" id="reportAverage">₱0.00</div>
+            <div class="sub">Per transaction</div>
+          </div>
+          <div class="stat">
+            <div class="label">Out of Stock</div>
+            <div class="num" id="reportOut">0</div>
+            <div class="sub">Products with zero quantity</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>Sales by Product</h3>
+              <div class="muted">Total revenue from each product</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Units Sold</th>
+                  <th>Revenue</th>
+                </tr>
+              </thead>
+              <tbody id="productReport"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="page">
+        <div class="welcome"><div><h2>Account & Security Settings</h2><p>Manage your profile, password, and local business data.</p></div></div>
+        <div class="grid-two">
+          <div class="panel">
+            <h3>Profile Settings</h3>
+            <div class="field" style="margin-top:17px"><label>NAME / NUMBER</label><input id="profileName" maxlength="60" placeholder="Your name"></div>
+            <button class="primary" onclick="saveProfile()">Save Profile</button>
+          </div>
+          <div class="panel">
+            <h3>Change Password</h3>
+            <div class="field" style="margin-top:17px"><label>Current Password</label><input id="currentPassword" type="password" autocomplete="current-password"></div>
+            <div class="field"><label>New Password (at least 8 characters)</label><input id="newPassword" type="password" autocomplete="new-password"></div>
+            <div class="field"><label>Confirm New Password</label><input id="confirmPassword" type="password" autocomplete="new-password"></div>
+            <button class="primary" onclick="changePassword()">Update Password</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Data & Privacy</h3>
+          <p class="muted" style="line-height:1.7">Your inventory and sales are stored in this browser. Export a backup regularly. Importing a backup replaces the current inventory and sales data.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="secondary" onclick="exportBackup()">Download Data Backup</button>
+            <button class="secondary" onclick="document.getElementById('backupFile').click()">Import Backup</button>
+            <input id="backupFile" type="file" accept="application/json,.json" hidden onchange="importBackup(event)">
+            <button class="danger" onclick="resetBusinessData()">Reset Inventory & Sales</button>
+          </div>
+          <p class="muted" style="margin-top:14px">Security note: This is a browser-only demo. Password verification is protected with PBKDF2 hashing, but this is not server-side authentication. Anyone with access to this browser profile or developer tools may access or alter locally stored data. Do not use real or sensitive business information without a secure backend and database.</p>
+        </div>
+        <div class="panel">
+          <h3>Session</h3>
+          <p class="muted">Sign out to lock the application on this browser tab.</p>
+          <button class="danger" onclick="logout()">Log Out</button>
+        </div>
+      </section>
+      <footer>SMS · STOCK MANAGEMENT SYSTEM · DEMO DATA IS STORED LOCALLY IN YOUR BROWSER
+      </footer>
+    </main>
+  </div>
+
+  <div class="modal-back" id="productModal">
+    <div class="modal">
+      <h3 id="modalTitle">Add Product</h3><input type="hidden" id="editId">
+      <div class="form-grid">
+        <div class="field"><label>Product Name *</label><input id="pName" placeholder="e.g. Bottled Water"></div>
+        <div class="field"><label>Category</label><input id="pCategory" placeholder="e.g. Beverages"></div>
+        <div class="field"><label>Unit Price (₱) *</label><input id="pPrice" type="number" min="0" step=".01"
+            placeholder="0.00"></div>
+        <div class="field"><label>Quantity *</label><input id="pQty" type="number" min="0" step="1" placeholder="0">
+        </div>
+      </div>
+      <div class="modal-actions"><button class="secondary" onclick="closeProductModal()">Cancel</button><button
+          class="primary" onclick="saveProduct()">Save Product</button></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    const KEY = 'sms_inventory_v1', SALES = 'sms_sales_v1';
+
+    const AUTH_KEY = 'sms_auth_v1', PROFILE_KEY = 'sms_profile_v1';
+    const SESSION_KEY = 'sms_session_v1';
+    let authMode = 'login';
+    let activeAccountId = null;
+    const enc = new TextEncoder();
+    function randomSalt(){const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('')}
+    function hexBytes(hex){return new Uint8Array(hex.match(/.{1,2}/g).map(x=>parseInt(x,16)))}
+    async function passwordHash(password,salt){
+      const key=await crypto.subtle.importKey('raw',enc.encode(password),'PBKDF2',false,['deriveBits']);
+      const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:hexBytes(salt),iterations:250000,hash:'SHA-256'},key,256);
+      return Array.from(new Uint8Array(bits),b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    function authAccounts(){
+      try{
+        const saved=JSON.parse(localStorage.getItem(AUTH_KEY)||'null');
+        if(Array.isArray(saved)) return saved;
+        if(saved && saved.salt && saved.hash){
+          const profile=JSON.parse(localStorage.getItem(PROFILE_KEY)||'{"name":"Administrator"}');
+          const migrated=[{id:'legacy-'+Date.now(),username:profile.name||'Administrator',salt:saved.salt,hash:saved.hash,createdAt:saved.createdAt||new Date().toISOString()}];
+          localStorage.setItem(AUTH_KEY,JSON.stringify(migrated));
+          return migrated;
+        }
+        return [];
+      }catch{return []}
+    }
+    function saveAccounts(accounts){localStorage.setItem(AUTH_KEY,JSON.stringify(accounts))}
+    function togglePassword(id,button){
+      const field=document.getElementById(id);
+      const showing=field.type==='password';
+      field.type=showing?'text':'password';
+      button.textContent=showing?'Hide':'Show';
+      button.setAttribute('aria-label',showing?'Hide password':'Show password');
+    }
+    function setAuthMode(mode){
+      authMode=mode;
+      const creating=mode==='create';
+      document.getElementById('authNameField').hidden=false;
+      document.getElementById('authName').placeholder=creating?'Choose a name or number':'Enter your name or number';
+      document.getElementById('authDescription').textContent=creating?'Create your account to access SMS.':'Log in to manage your inventory and sales.';
+      document.getElementById('authSubmit').textContent=creating?'Create Account':'Log In';
+      document.getElementById('authPassword').autocomplete=creating?'new-password':'current-password';
+      document.getElementById('authSwitchText').textContent=creating?'Already have an account?':'No account yet?';
+      document.getElementById('authSwitch').textContent=creating?'Log In':'Create Account';
+      document.getElementById('authError').textContent='';
+    }
+    function showAuth(){
+      document.getElementById('mainApp').style.display='none';
+      document.getElementById('authScreen').style.display='flex';
+      setAuthMode(authAccounts().length?'login':'create');
+    }
+    function enterApp(){
+      document.getElementById('authScreen').style.display='none';
+      document.getElementById('mainApp').style.display='grid';
+      const profile=JSON.parse(localStorage.getItem(PROFILE_KEY)||'{"name":"Administrator"}');
+      document.getElementById('userDisplay').textContent=profile.name||'Administrator';
+      document.getElementById('userAvatar').textContent=(profile.name||'A').trim().charAt(0).toUpperCase();
+      document.getElementById('profileName').value=profile.name||'Administrator';
+      renderAll();
+    }
+    document.getElementById('authForm').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const username=document.getElementById('authName').value.trim();
+      const pass=document.getElementById('authPassword').value;
+      const error=document.getElementById('authError');
+      const submit=document.getElementById('authSubmit');
+      error.textContent='';
+      if(!username){error.textContent='Please enter your name or number.';return}
+      if(pass.length<8){error.textContent='Use a password with at least 8 characters.';return}
+      submit.disabled=true;submit.textContent='Please wait...';
+      try{
+        const accounts=authAccounts();
+        if(authMode==='create'){
+          if(accounts.some(a=>a.username.toLowerCase()===username.toLowerCase())){error.textContent='That name or number already has an account. Please log in.';return}
+          const salt=randomSalt(),hash=await passwordHash(pass,salt);
+          const account={id:'acct-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),username,salt,hash,createdAt:new Date().toISOString()};
+          accounts.push(account);saveAccounts(accounts);
+          activeAccountId=account.id;
+          localStorage.setItem(PROFILE_KEY,JSON.stringify({name:username}));
+        }else{
+          const account=accounts.find(a=>a.username.toLowerCase()===username.toLowerCase());
+          if(!account){error.textContent='Account not found. Please check your name/number or create an account.';return}
+          const hash=await passwordHash(pass,account.salt);
+          if(hash!==account.hash){error.textContent='Incorrect password. Please try again.';return}
+          activeAccountId=account.id;
+          localStorage.setItem(PROFILE_KEY,JSON.stringify({name:account.username}));
+        }
+        sessionStorage.setItem(SESSION_KEY,'unlocked');
+        document.getElementById('authForm').reset();
+        document.getElementById('authPassword').type='password';
+        document.getElementById('toggleAuthPassword').textContent='Show';
+        enterApp();
+      }catch(err){error.textContent='Unable to create or verify account in this browser. Use a modern browser or localhost.'}
+      finally{submit.disabled=false;submit.textContent=authMode==='create'?'Create Account':'Log In'}
+    });
+    function logout(){sessionStorage.removeItem(SESSION_KEY);activeAccountId=null;showAuth();document.getElementById('authPassword').value=''}
+    async function saveProfile(){
+      const name=document.getElementById('profileName').value.trim();
+      if(!name){toast('Name/number cannot be empty.');return}
+      const accounts=authAccounts(),account=accounts.find(a=>a.id===activeAccountId);
+      if(account && accounts.some(a=>a.id!==account.id && a.username.toLowerCase()===name.toLowerCase())){toast('That name/number is already in use.');return}
+      if(account){account.username=name;saveAccounts(accounts)}
+      localStorage.setItem(PROFILE_KEY,JSON.stringify({name}));
+      document.getElementById('userDisplay').textContent=name;
+      document.getElementById('userAvatar').textContent=name.charAt(0).toUpperCase();
+      toast('Profile updated.');
+    }
+    async function changePassword(){
+      const current=document.getElementById('currentPassword').value,newPass=document.getElementById('newPassword').value,confirmPass=document.getElementById('confirmPassword').value;
+      if(newPass.length<8){toast('New password must be at least 8 characters.');return}
+      if(newPass!==confirmPass){toast('New passwords do not match.');return}
+      const accounts=authAccounts(),record=accounts.find(a=>a.id===activeAccountId);
+      if(!record || await passwordHash(current,record.salt)!==record.hash){toast('Current password is incorrect.');return}
+      const salt=randomSalt(),hash=await passwordHash(newPass,salt);
+      record.salt=salt;record.hash=hash;record.updatedAt=new Date().toISOString();saveAccounts(accounts);
+      ['currentPassword','newPassword','confirmPassword'].forEach(id=>document.getElementById(id).value='');
+      toast('Password updated successfully.');
+    }
+    function exportBackup(){
+      const data={app:'SMS',version:1,exportedAt:new Date().toISOString(),products,sales};
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='sms-backup.json';a.click();URL.revokeObjectURL(a.href);toast('Backup downloaded.');
+    }
+    function importBackup(event){
+      const file=event.target.files[0];if(!file)return;
+      const reader=new FileReader();
+      reader.onload=()=>{
+        try{
+          const data=JSON.parse(reader.result);
+          if(data.app!=='SMS'||!Array.isArray(data.products)||!Array.isArray(data.sales))throw new Error('Invalid backup');
+          if(!confirm('Import this backup? Current inventory and sales will be replaced.'))return;
+          products=data.products;sales=data.sales;persist();renderAll();toast('Backup imported.');
+        }catch(err){toast('Invalid backup file. Nothing was changed.')}
+        finally{event.target.value=''}
+      };reader.readAsText(file);
+    }
+    function resetBusinessData(){
+      if(!confirm('Permanently clear all inventory and sales data in this browser?'))return;
+      products=[];sales=[];persist();renderAll();toast('Inventory and sales data cleared.');
+    }
+
+    const money = n => '₱' + Number(n || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const safe = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let products = JSON.parse(localStorage.getItem(KEY) || 'null') || [
+      { id: 101, name: 'Bottled Water', category: 'Beverages', price: 15, qty: 40, sold: 0 },
+      { id: 102, name: 'Instant Noodles', category: 'Grocery', price: 18, qty: 25, sold: 0 },
+      { id: 103, name: 'Bath Soap', category: 'Personal Care', price: 32, qty: 4, sold: 0 },
+      { id: 104, name: 'Notebook', category: 'School Supplies', price: 28, qty: 18, sold: 0 },
+      { id: 105, name: 'Potato Chips', category: 'Snacks', price: 12, qty: 3, sold: 0 }
+    ];
+    let sales = JSON.parse(localStorage.getItem(SALES) || '[]');
+    function persist() { localStorage.setItem(KEY, JSON.stringify(products)); localStorage.setItem(SALES, JSON.stringify(sales)) }
+    function toast(msg) { let t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300) }
+    function status(q) { return q === 0 ? '<span class="pill out">Out of stock</span>' : q <= 5 ? '<span class="pill low">Low stock</span>' : '<span class="pill ok">In stock</span>' }
+    function showPage(name) { document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === name)); document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.page === name)); document.getElementById('pageTitle').textContent = ({ dashboard: 'Business Overview', inventory: 'Product Inventory', sales: 'Record a Sale', transactions: 'Sales Transactions', reports: 'Business Reports', settings: 'Settings' })[name]; renderAll() }
+    document.querySelectorAll('.nav button').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
+    function openProductModal(id = null) { let p = products.find(x => x.id === id); document.getElementById('modalTitle').textContent = p ? 'Edit Product' : 'Add Product'; document.getElementById('editId').value = p?.id || ''; document.getElementById('pName').value = p?.name || ''; document.getElementById('pCategory').value = p?.category || ''; document.getElementById('pPrice').value = p?.price ?? ''; document.getElementById('pQty').value = p?.qty ?? ''; document.getElementById('productModal').classList.add('show') }
+    function closeProductModal() { document.getElementById('productModal').classList.remove('show') }
+    function saveProduct() { let id = Number(document.getElementById('editId').value), name = document.getElementById('pName').value.trim(), category = document.getElementById('pCategory').value.trim() || 'Uncategorized', price = Number(document.getElementById('pPrice').value), qty = Number(document.getElementById('pQty').value); if (!name || document.getElementById('pPrice').value === '' || document.getElementById('pQty').value === '' || !Number.isFinite(price) || price < 0 || !Number.isInteger(qty) || qty < 0) { toast('Please enter valid product details.'); return } if (id) { let p = products.find(x => x.id === id); Object.assign(p, { name, category, price, qty }) } else products.unshift({ id: Date.now(), name, category, price, qty, sold: 0 }); persist(); closeProductModal(); renderAll(); toast(id ? 'Product updated.' : 'Product added successfully.') }
+    function deleteProduct(id) { let p = products.find(x => x.id === id); if (!p) return; if (!confirm('Delete ' + p.name + ' from inventory?')) return; products = products.filter(x => x.id !== id); persist(); renderAll(); toast('Product deleted.') }
+    function renderInventory() { let q = (document.getElementById('inventorySearch')?.value || '').toLowerCase(), rows = products.filter(p => (p.name + ' ' + p.category).toLowerCase().includes(q)); document.getElementById('inventoryCount').textContent = rows.length + ' item(s)'; document.getElementById('inventoryRows').innerHTML = rows.length ? rows.map(p => `<tr><td><b>${safe(p.name)}</b></td><td>${safe(p.category)}</td><td>${money(p.price)}</td><td>${p.qty}</td><td>${status(p.qty)}</td><td><div class="actions"><button class="mini edit" onclick="openProductModal(${p.id})">Edit</button><button class="mini delete" onclick="deleteProduct(${p.id})">Delete</button></div></td></tr>`).join('') : '<tr><td colspan="6" class="empty">No products found. Add your first product.</td></tr>' }
+    function updateSaleOptions() { let s = document.getElementById('saleProduct'), old = s.value; s.innerHTML = products.filter(p => p.qty > 0).map(p => `<option value="${p.id}">${safe(p.name)} — ${p.qty} available · ${money(p.price)}</option>`).join(''); if ([...s.options].some(o => o.value === old)) s.value = old; if (!s.options.length) s.innerHTML = '<option value="">No stock available</option>'; updateSaleTotal() }
+    function updateSaleTotal() { let p = products.find(x => x.id === Number(document.getElementById('saleProduct').value)), q = Math.max(0, Number(document.getElementById('saleQty').value) || 0); document.getElementById('saleTotal').textContent = money(p ? p.price * q : 0) }
+    function recordSale() { let p = products.find(x => x.id === Number(document.getElementById('saleProduct').value)), q = Number(document.getElementById('saleQty').value); if (!p) { toast('Please add a product with available stock.'); return } if (!Number.isInteger(q) || q < 1) { toast('Enter a valid quantity.'); return } if (q > p.qty) { toast('Not enough stock available.'); return } let total = p.price * q; p.qty -= q; p.sold = (p.sold || 0) + q; sales.unshift({ id: 'TX-' + Date.now().toString().slice(-8), date: new Date().toISOString(), product: p.name, productId: p.id, qty: q, customer: document.getElementById('saleCustomer').value.trim() || 'Walk-in', total }); persist(); document.getElementById('saleQty').value = 1; document.getElementById('saleCustomer').value = ''; renderAll(); toast('Sale recorded. Inventory updated!') }
+    function renderTransactions() { let el = document.getElementById('transactionRows'); el.innerHTML = sales.length ? sales.map(s => `<tr><td>${new Date(s.date).toLocaleString()}</td><td><b>${safe(s.id)}</b></td><td>${safe(s.product)}</td><td>${s.qty}</td><td>${safe(s.customer)}</td><td><b>${money(s.total)}</b></td></tr>`).join('') : '<tr><td colspan="6" class="empty">No transactions yet. Record your first sale.</td></tr>' }
+    function renderDashboard() { let value = products.reduce((a, p) => a + p.price * p.qty, 0), revenue = sales.reduce((a, s) => a + s.total, 0); document.getElementById('statProducts').textContent = products.length; document.getElementById('statValue').textContent = money(value); document.getElementById('statSales').textContent = money(revenue); document.getElementById('statLow').textContent = products.filter(p => p.qty <= 5).length; document.getElementById('recentProducts').innerHTML = products.slice(0, 5).map(p => `<tr><td><b>${safe(p.name)}</b></td><td>${p.qty}</td><td>${money(p.price)}</td><td>${status(p.qty)}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">No products yet.</td></tr>'; let days = []; for (let i = 6; i >= 0; i--) { let d = new Date(); d.setDate(d.getDate() - i); let key = d.toDateString(), sum = sales.filter(s => new Date(s.date).toDateString() === key).reduce((a, s) => a + s.total, 0); days.push({ label: d.toLocaleDateString('en', { weekday: 'short' }), sum }) } let max = Math.max(1, ...days.map(d => d.sum)); document.getElementById('miniChart').innerHTML = days.map(d => `<div class="bar-col"><b>${d.sum ? Math.round(d.sum) : ''}</b><div class="bar" style="height:${Math.max(3, d.sum / max * 100)}%"></div><small>${d.label}</small></div>`).join('') }
+    function renderReports() { let units = products.reduce((a, p) => a + p.qty, 0), revenue = sales.reduce((a, s) => a + s.total, 0); document.getElementById('reportUnits').textContent = units; document.getElementById('reportTransactions').textContent = sales.length; document.getElementById('reportAverage').textContent = money(sales.length ? revenue / sales.length : 0); document.getElementById('reportOut').textContent = products.filter(p => p.qty === 0).length; document.getElementById('productReport').innerHTML = products.map(p => `<tr><td><b>${safe(p.name)}</b></td><td>${p.sold || 0}</td><td>${money((p.sold || 0) * p.price)}</td></tr>`).join('') || '<tr><td colspan="3" class="empty">No product data.</td></tr>' }
+    function exportCSV() { let rows = [['Date', 'Transaction ID', 'Product', 'Quantity', 'Customer', 'Total'], ...sales.map(s => [new Date(s.date).toLocaleString(), s.id, s.product, s.qty, s.customer, s.total])], csv = rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n'), a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'sms-transactions.csv'; a.click(); URL.revokeObjectURL(a.href); toast('CSV export prepared.') }
+    function renderAll() { renderDashboard(); renderInventory(); updateSaleOptions(); renderTransactions(); renderReports() }
+    if(sessionStorage.getItem(SESSION_KEY)==='unlocked' && authAccounts().length){const p=JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}');const a=authAccounts().find(x=>x.username===p.name);activeAccountId=a?.id||null;if(a){enterApp()}else{sessionStorage.removeItem(SESSION_KEY);showAuth()}}else{showAuth()}
+  </script>
+</body>
+
+</html>
